@@ -57,6 +57,15 @@ type Options = {
   defaultLocale?: string
   cwd?: string
   withDescriptions?: boolean
+  moduleSourceName?: unknown
+  enforceDefaultMessage?: boolean
+  enforceDescriptions?: boolean
+  extractSourceLocation?: boolean
+  messagesDir?: string
+  overrideIdFn?: unknown
+  removeDefaultMessage?: unknown
+  extractFromFormatMessageCall?: unknown
+  additionalComponentNames?: unknown
   [key: string]: unknown
 }
 
@@ -75,8 +84,14 @@ export default async (
     withDescriptions = false,
     cwd = process.cwd(),
     ...pluginOptions
-  }: Options = {}
+  }: Options = {},
+  fillLocalesWithDefaultMessage = false
 ) => {
+  delete pluginOptions.d
+  delete pluginOptions.o
+  delete pluginOptions.l
+  delete pluginOptions.f
+
   if (!Array.isArray(locales)) {
     throw new TypeError(`Expected a Array, got ${typeof locales}`)
   }
@@ -104,7 +119,10 @@ export default async (
     for (const { id, defaultMessage, description } of result) {
       // eslint-disable-next-line no-unused-vars
       for (const locale of locales) {
-        const message = defaultLocale === locale ? defaultMessage : ''
+        const message =
+          defaultLocale === locale || fillLocalesWithDefaultMessage
+            ? defaultMessage
+            : ''
         localeObj[locale][id] = withDescriptions
           ? { message, description }
           : message
