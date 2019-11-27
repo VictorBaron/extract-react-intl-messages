@@ -61,6 +61,7 @@ type Opts = {
   defaultLocale: string
   format?: string
   flat?: boolean
+  fillLocalesWithDefaultMessage?: boolean
   [key: string]: unknown
 }
 
@@ -75,6 +76,7 @@ const extractMessage = async (
     format = 'json',
     flat = isJson(format),
     defaultLocale = 'en',
+    fillLocalesWithDefaultMessage = false,
     ...opts
   }: Opts = {
     defaultLocale: 'en'
@@ -107,7 +109,8 @@ const extractMessage = async (
   const newLocaleMaps = await _extractReactIntl(
     locales,
     pattern,
-    extractorOptions
+    extractorOptions,
+    fillLocalesWithDefaultMessage
   )
 
   return Promise.all(

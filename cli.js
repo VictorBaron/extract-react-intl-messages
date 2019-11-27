@@ -47,6 +47,10 @@ const cli = meow(
         type: 'boolean',
         default: false
       },
+      fillLocalesWithDefaultMessage: {
+        type: 'boolean',
+        default: false
+      },
       // babel-plugin-react-intl boolean options
       enforceDescriptions: {
         type: 'boolean',
@@ -59,12 +63,16 @@ const cli = meow(
       extractSourceLocation: {
         type: 'boolean',
         default: false
+      },
+      extractFromFormatMessageCall: {
+        type: 'boolean',
+        default: true
       }
     }
   }
 )
 
-const { output, locales } = cli.flags
+const { output, locales, ...flags } = cli.flags
 
 if (!output) {
   console.log('ERROR: required output')
@@ -78,4 +86,4 @@ if (!locales || typeof locales !== 'string') {
 
 const localesMap = locales.split(',')
 
-fn(localesMap, cli.input[0], output, cli.flags)
+fn(localesMap, cli.input[0], output, flags)
